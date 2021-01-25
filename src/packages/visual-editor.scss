@@ -1,0 +1,72 @@
+/* @formatter:off */
+$headerSize: 60px;                              //定义头部的高度
+$menuSize: 275px;                               //定义菜单的宽度
+$operatorSize: 275px;                           //定义右侧编辑详情操作栏的宽度
+
+$ibc: #dcdfe6;                                //边框颜色
+$ibl: #ebeef5;                                //边框颜色轻
+$itc: #314659;                                //字体颜色
+$icc: rgba(0, 0, 0, 0.45);                    //图标颜色
+$boxShadowColor: #f0f1f2;                     //阴影颜色
+
+
+$primary: #409eFF;                            //主色调
+
+/* @formatter: on */
+.visual-editor {
+    position: fixed;
+    top: 20px;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background-color: white;
+
+    &:before {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(black, 0.1);
+        content:'';
+    }
+
+    & > .visual-editor-menu {
+        position: absolute;
+        width: $menuSize;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        background-color: white;
+    }
+    & > .visual-editor-head {
+        position: absolute;
+        left: $menuSize;
+        right: $operatorSize;
+        top: 0;
+        height: $headerSize;
+        background-color: blue;
+    }
+    & > .visual-editor-operator {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: #ff0;
+        width: $operatorSize;
+    }
+    & > .visual-editor-work {
+        padding-top: $headerSize;
+        padding-left: $menuSize;
+        padding-right: $operatorSize;
+        background-color: skyblue;
+        box-sizing: border-box;
+        height: 100%;
+        & > .visual-editor-content {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+    }
+
+}
