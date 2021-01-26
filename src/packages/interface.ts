@@ -1,12 +1,16 @@
-export interface VisualEditorModalData {
-    top: number;
-    left: number;
+export interface VisualEditorBlock {
+    top: number,
+    left: number,
 }
 
-export interface VisualEditorModalValue {
+interface BlockData extends Array<VisualEditorBlock> {
+    [index: number]: VisualEditorBlock
+}
+
+export interface VisualEditorModelValue {
     container: {
-        width: number;
-        height: number;
+        width: number,
+        height: number,
     },
-    blocks: VisualEditorModalData[]
+    blocks?: BlockData,
 }
