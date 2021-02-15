@@ -1,6 +1,6 @@
 
 import { computed, defineComponent, PropType } from "vue";
-import { VisualEditorModelValue } from "./interface";
+import { VisualEditorModelValue, VisualEditorConfig } from "./interface";
 import { useModel } from "./utils/useModel";
 import { VisualEditorBlockRender } from './visual-editor-block';
 import "./visual-editor.scss";
@@ -8,6 +8,7 @@ import "./visual-editor.scss";
 export const VisualEditor = defineComponent({
   props: {
     modelValue: { type: Object as PropType<VisualEditorModelValue>, require: true },
+    config: { type: Object as PropType<VisualEditorConfig>, require: true }
   },
   emit: {
     "update-modelValue": (val?: VisualEditorModelValue) => true,
@@ -20,6 +21,8 @@ export const VisualEditor = defineComponent({
       () => props.modelValue as VisualEditorModelValue,
       (val: VisualEditorModelValue) => ctx.emit("update-modelValue", val)
     );
+
+    console.log('dataModal', dataModel.value.container);
 
     const containerStyles = computed(() => ({
       width: `${dataModel.value.container.width}px`,
@@ -34,15 +37,15 @@ export const VisualEditor = defineComponent({
         <div class="visual-editor-work">
           <div class="visual-editor-content">
             <div class="visual-editor-container" style={containerStyles.value}>
-            {
+              {
                 !!dataModel.value.blocks && (
-                dataModel.value.blocks.map((block,index) => {
-                  console.log('index', index)
-                 return <VisualEditorBlockRender block={block} key={index}/>
-                }
-              )
-              )
-            }
+                  dataModel.value.blocks.map((block, index) => {
+                    console.log('index', index)
+                    return <VisualEditorBlockRender block={block} key={index} />
+                  }
+                  )
+                )
+              }
             </div>
           </div>
         </div>
