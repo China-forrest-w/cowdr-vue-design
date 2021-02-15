@@ -1,14 +1,14 @@
 <template>
   <div>
     <h1>这里是主页</h1>
-    <visual-editor v-model="jsonData" />
+    <visual-editor v-model="jsonData" :config="VisualConfig" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { VisualEditor } from "./packages/visual-editor";
-import { VisualConfig } from './packages/visual.config';
+import { VisualConfig } from "./packages/visual.config";
 export default defineComponent({
   name: "App",
   components: {

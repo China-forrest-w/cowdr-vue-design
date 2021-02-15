@@ -22,16 +22,21 @@ export const VisualEditor = defineComponent({
       (val: VisualEditorModelValue) => ctx.emit("update-modelValue", val)
     );
 
-    console.log('dataModal', dataModel.value.container);
-
     const containerStyles = computed(() => ({
       width: `${dataModel.value.container.width}px`,
       height: `${dataModel.value.container.height}px`
     }))
-
+console.log('props.config', props.config);
     return () => (
       <div class="visual-editor">
-        <div class="visual-editor-menu">visual-editor-menu</div>
+        <div class="visual-editor-menu">{
+          props?.config?.componentList.map(component => <div class="visual-editor-menu-item">
+            <span class="visual-editor-menu-item-label">{component.label}</span>
+            <div class="visual-editor-item-content">
+              {component.preview()}
+            </div>
+          </div>)
+        }</div>
         <div class="visual-editor-head">visual-editor-head</div>
         <div class="visual-editor-operator">visual-editor-operator</div>
         <div class="visual-editor-work">
