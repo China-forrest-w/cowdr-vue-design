@@ -9,7 +9,7 @@ $itc: #314659; //字体颜色
 $icc: rgba(0, 0, 0, 0.45); //图标颜色
 $boxShadowColor: #f0f1f2; //阴影颜色
 
-$primary: #409eff; //主色调
+$primary: #ee0f7f; //主色调
 
 /* @formatter: on */
 .visual-editor {
@@ -40,13 +40,42 @@ $primary: #409eff; //主色调
     z-index: 2;
 
     .visual-editor-menu-item {
+      position: relative;
+      width: calc(100% - 20);
+      border: solid 3px $ibl;
+      margin-top: 20px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      box-sizing: border-box;
 
+      &:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        content: '';
+        z-index: 2;
+      }
+      &:hover {
+        border-color: $primary;
+        cursor: move;
+      }
     }
     .visual-editor-menu-item-label {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background-color: $primary;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+      z-index: 1;
 
-    }
-    .visual-editor-menu-item-content {
-      
+
     }
   }
   & > .visual-editor-head {

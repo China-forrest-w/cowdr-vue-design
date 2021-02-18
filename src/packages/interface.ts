@@ -15,7 +15,7 @@ export interface VisualEditorModelValue {
   blocks?: BlockData;
 }
 
-interface VisualEditorComponent {
+export interface VisualEditorComponent {
   key: string;
   label: string;
   preview: () => JSX.Element;
