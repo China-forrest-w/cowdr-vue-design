@@ -28,7 +28,7 @@ export const VisualEditor = defineComponent({
       width: `${dataModel.value.container.width}px`,
       height: `${dataModel.value.container.height}px`
     }))
-    
+
     const menuDraggier = {
       current: {
         component: null as null | VisualEditorComponent
@@ -38,6 +38,8 @@ export const VisualEditor = defineComponent({
         containerRef.value.addEventListener('dragover', menuDraggier.dragover);
         containerRef.value.addEventListener('dragleave', menuDraggier.dragleave);
         containerRef.value.addEventListener('drop', menuDraggier.drop);
+        menuDraggier.current.component = component;
+        console.log('menuDraggier.current', menuDraggier.current);
       },
       dragenter: (e: DragEvent) => {
         e.dataTransfer!.dropEffect = 'move';
@@ -50,12 +52,16 @@ export const VisualEditor = defineComponent({
       },
       dragend: (e: DragEvent) => {
         containerRef.value.removeEventListener('dragenter', menuDraggier.dragenter);
-        containerRef.value,removeEventListener('dragover', menuDraggier.dragover);
+        containerRef.value, removeEventListener('dragover', menuDraggier.dragover);
         containerRef.value.removeEventListener('dragleave', menuDraggier.dragleave);
         containerRef.value.removeEventListener('drop', menuDraggier.drop);
         menuDraggier.current.component = null;
+        console.log('dragend')
+        console.log('menuDraggier.current', menuDraggier.current);
+
       },
       drop: (e: DragEvent) => {
+        console.log('drop')
         const blocks = dataModel.value.blocks || [];
         blocks.push({
           top: e.offsetY,
@@ -72,7 +78,11 @@ export const VisualEditor = defineComponent({
       <div class="visual-editor">
         <div class="visual-editor-menu">{
           props?.config?.componentList.map(component =>
-            <div class="visual-editor-menu-item" draggable onDragstart={(e) => menuDraggier.dragstart(e, component)}>
+            <div class="visual-editor-menu-item"
+              draggable
+              onDragend={menuDraggier.dragend}
+              onDragstart={(e) => menuDraggier.dragstart(e, component)}
+            >
               <span class="visual-editor-menu-item-label">{component.label}</span>
               <div class="visual-editor-item-content">
                 {component.preview()}
