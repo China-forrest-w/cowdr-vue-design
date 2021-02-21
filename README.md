@@ -88,3 +88,7 @@ export default {
     }
   }
 </script>
+
+
+# Vue3 & React
+vue3会自动将监听的事件代理到根节点上，如果react的话要：需要自己监听组件的事件 然后派发出来

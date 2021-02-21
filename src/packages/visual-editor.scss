@@ -119,7 +119,21 @@ $primary: #ee0f7f; //主色调
         position: relative;
 
         .visual-editor-block {
-          position: absolute
+          position: absolute;
+          &:after {
+            $space: 3px;
+            position: absolute;
+            top: -$space;
+            bottom: -$space;
+            left: -$space;
+            right: -$space;
+            content: '';
+          }
+          &.visual-editor-block-focus {
+            &:after {
+              border: dashed 1px $primary;
+            }
+          }
         }
       }
     }

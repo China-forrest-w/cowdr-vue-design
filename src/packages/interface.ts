@@ -1,6 +1,9 @@
 export interface VisualEditorBlock {
-  top: number;
-  left: number;
+  componentKey: string;                     //组件的类型
+  top: number;                              //组件相对画布上方的位置
+  left: number;                             //组件相对画布左侧的位置
+  adjustPosition: boolean;                  //组件相对鼠标是否居中
+  focus: boolean;                           //组件是否为选中状态
 }
 
 interface BlockData extends Array<VisualEditorBlock> {
@@ -16,10 +19,29 @@ export interface VisualEditorModelValue {
 }
 
 export interface VisualEditorComponent {
+  componentKey: string;
   key: string;
   label: string;
   preview: () => JSX.Element;
   render: () => JSX.Element;
+}
+
+export function createNewBlock({
+  component,
+  left,
+  top
+}: {
+  component: VisualEditorComponent;
+  left: number;
+  top: number;
+}): VisualEditorBlock {
+  return {
+    top,
+    left,
+    componentKey: component.componentKey,
+    adjustPosition: true,
+    focus: true
+  }
 }
 
 export function createVisualEditorConfig() {

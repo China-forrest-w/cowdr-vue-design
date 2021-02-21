@@ -24,12 +24,18 @@ export default defineComponent({
         },
         blocks: [
           {
+            componentKey: "input",
             top: 100,
             left: 500,
+            adjustPosition: false,
+            focus: true
           },
           {
+            componentKey: "button",
             top: 0,
             left: 0,
+            adjustPosition: false,
+            focus: true,
           },
         ],
       },
