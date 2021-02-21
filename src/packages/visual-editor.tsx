@@ -29,6 +29,19 @@ export const VisualEditor = defineComponent({
       height: `${dataModel.value.container.height}px`
     }))
 
+    const method = {
+      // 清除没有被点中组件的选中样式状态
+      clearFocus: (clickBlock?: VisualEditorBlock) => {
+        (dataModel.value.blocks || []).forEach(block => {
+          if (block === clickBlock) {
+            clickBlock.focus = !clickBlock.focus;
+          } else {
+            block.focus = false;
+          }
+        });
+      }
+    }
+
     const menuDraggier = {
       dragComponent: null as (null | VisualEditorComponent),
       containerHandler: {
@@ -72,14 +85,18 @@ export const VisualEditor = defineComponent({
       return {
         container: {
           onMousedown: (e: MouseEvent) => {
-            (dataModel.value.blocks || []).forEach(block => block.focus = false);
+            method.clearFocus();
           },
         },
         block: {
           onMousedown: (e: MouseEvent, block: VisualEditorBlock) => {
             e.stopPropagation();
             e.preventDefault();
-            block.focus = !block.focus;
+            if (e.shiftKey) {
+              block.focus = !block.focus;
+            } else {
+              method.clearFocus(block);
+            }
           }
         }
       }
