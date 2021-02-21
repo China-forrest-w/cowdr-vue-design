@@ -78,6 +78,7 @@ export const VisualEditor = defineComponent({
         block: {
           onMousedown: (e: MouseEvent, block: VisualEditorBlock) => {
             e.stopPropagation();
+            e.preventDefault();
             block.focus = !block.focus;
           }
         }
