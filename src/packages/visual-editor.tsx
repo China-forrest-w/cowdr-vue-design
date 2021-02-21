@@ -17,18 +17,22 @@ export const VisualEditor = defineComponent({
     VisualEditorBlockRender
   },
   setup(props, ctx) {
-    const dataModel = useModel(
-      () => props.modelValue as VisualEditorModelValue,
-      (val: VisualEditorModelValue) => ctx.emit("update-modelValue", val)
-    );
 
+    /* 通过自定义hooks实现双向绑定功能，获得画布以及画布中组件的数据 */
+    const dataModel = useModel(() => props.modelValue as VisualEditorModelValue, (val: VisualEditorModelValue) => ctx.emit("update-modelValue", val));
+
+    /* 画布container节点 dom对象的引用（以此用来监控拖拽的诸多事件） */
     const containerRef = ref({} as HTMLDivElement)
 
+    /* 控制画布样式（大小） */
     const containerStyles = computed(() => ({
       width: `${dataModel.value.container.width}px`,
       height: `${dataModel.value.container.height}px`
     }))
 
+    /* 计算选中与未选中组件(block)的数据 */
+
+    /* 定义对外暴露的方法 */
     const method = {
       // 清除没有被点中组件的选中样式状态
       clearFocus: (clickBlock?: VisualEditorBlock) => {
@@ -42,6 +46,7 @@ export const VisualEditor = defineComponent({
       }
     }
 
+    /* 拖拽的一些方法 */
     const menuDraggier = {
       dragComponent: null as (null | VisualEditorComponent),
       containerHandler: {
@@ -81,6 +86,7 @@ export const VisualEditor = defineComponent({
       }
     }
 
+    /* 点击当前组件时，控制当前组件和其他组件的选中状态 */
     const focusHandler = () => {
       return {
         container: {
@@ -101,6 +107,34 @@ export const VisualEditor = defineComponent({
         }
       }
     }
+
+    /* 处理组件在画布中拖拽的相关动作 */
+    // const blockDraggier = (() => {
+    //   let dragState = {
+    //     startX: 0,
+    //     startY: 0,
+    //   };
+    //   const mousedown = (e: MouseEvent) => {
+    //     dragState = {
+    //       startX: e.clientX,
+    //       startY: e.clientY
+    //     }
+    //     document.addEventListener('mousemove', mousemove);
+    //     document.addEventListener('mouseup', mouseup);
+    //   }
+
+    //   const mousemove = (e: MouseEvent) => {
+    //     const durX = e.clientX - dragState.startX;
+    //     const durY = e.clientY - dragState.startY;
+    //   }
+
+    //   const mouseup = () => {
+    //     document.removeEventListener('mousemove', mousemove);
+    //     document.removeEventListener('mouseup', mouseup);
+    //   }
+    //   return mousedown;
+    // })();
+
     return () => (
       <div class="visual-editor">
         <div class="visual-editor-menu">{
