@@ -36,22 +36,33 @@ $primary: #ee0f7f; //主色调
     top: 0;
     bottom: 0;
     left: 0;
-    background-color: white;
+    background-color: rgb(133, 126, 126);
     z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+
+    &:after{
+      height: 0;
+      min-width: 113px;
+      content: "";
+    }
 
     .visual-editor-menu-item {
       position: relative;
-      width: calc(100% - 20);
-      border: solid 3px $ibl;
+      width: calc(100% - 160px);
+      height: 70px;
+      border: dashed 1px $ibl;
       margin-top: 20px;
-      min-height: 80px;
+      min-height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 30px 20px;
       box-sizing: border-box;
 
-      &:after {
+      &:before {
         position: absolute;
         top: 0;
         left: 0;
@@ -74,9 +85,10 @@ $primary: #ee0f7f; //主色调
       padding: 4px 8px;
       font-size: 12px;
       z-index: 1;
-
-
     }
+    // .visual-editor-item-content {
+    //   display: flex;
+    // }
   }
   & > .visual-editor-head {
     position: absolute;

@@ -158,19 +158,19 @@ export const VisualEditor = defineComponent({
 
     return () => (
       <div class="visual-editor">
-        <div class="visual-editor-menu">{
-          props?.config?.componentList.map(component =>
-            <div class="visual-editor-menu-item"
+        <div class="visual-editor-menu">
+          {props?.config?.componentList.map(component =>
+            <span class="visual-editor-menu-item"
               draggable
               onDragend={menuDraggier.blockHandler.dragend}
               onDragstart={() => menuDraggier.blockHandler.dragstart(component)}
             >
               <span class="visual-editor-menu-item-label">{component.label}</span>
-              <div class="visual-editor-item-content">
+              <span class="visual-editor-item-content">
                 {component.preview()}
-              </div>
-            </div>)
-        }</div>
+              </span>
+            </span>)
+          }</div>
         <div class="visual-editor-head">visual-editor-head</div>
         <div class="visual-editor-operator">visual-editor-operator</div>
         <div class="visual-editor-work">
