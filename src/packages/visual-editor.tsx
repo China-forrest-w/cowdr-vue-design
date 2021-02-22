@@ -31,16 +31,26 @@ export const VisualEditor = defineComponent({
     }))
 
     /* 计算选中与未选中组件(block)的数据 */
+    const focusData = computed(() => {
+      const focus: VisualEditorBlock[] = [];
+      const unFocus: VisualEditorBlock[] = [];
+      (dataModel.value.blocks || []).forEach(block => (block.focus ? focus : unFocus).push(block))
+      return {
+        focus,               //选中组件的数据
+        unFocus              //未选中组件的数据
+      }
+    })
 
     /* 定义对外暴露的方法 */
     const method = {
       // 清除没有被点中组件的选中样式状态
       clearFocus: (clickBlock?: VisualEditorBlock) => {
         (dataModel.value.blocks || []).forEach(block => {
-          if (block === clickBlock) {
-            clickBlock.focus = !clickBlock.focus;
-          } else {
-            block.focus = false;
+          if (block === clickBlock && clickBlock.focus === true) {
+            clickBlock.focus = true;
+          }
+          if (clickBlock !== undefined && clickBlock.focus === false) {
+            clickBlock.focus = true;
           }
         });
       }
@@ -86,12 +96,49 @@ export const VisualEditor = defineComponent({
       }
     }
 
+    /* 处理组件在画布中拖拽的相关动作 */
+    const blockDraggier = (() => {
+      let dragState = {
+        startX: 0,
+        startY: 0,
+        startPos: [] as { left: number; top: number }[]
+      };
+
+      const mousemove = (e: MouseEvent) => {
+        const durX = e.clientX - dragState.startX;        //偏移量X
+        const durY = e.clientY - dragState.startY;        //偏移量Y
+        focusData.value.focus.forEach((block, index) => {
+          block.top = dragState.startPos[index].top + durY;
+          block.left = dragState.startPos[index].left + durX;
+        })
+      }
+
+      const mouseup = () => {
+        document.removeEventListener('mousemove', mousemove);
+        document.removeEventListener('mouseup', mouseup);
+      }
+
+      const mousedown = (e: MouseEvent) => {
+        dragState = {
+          startX: e.clientX,
+          startY: e.clientY,
+          startPos: focusData.value.focus.map(({ top, left }) => ({ top, left }))
+        }
+        document.addEventListener('mousemove', mousemove);
+        document.addEventListener('mouseup', mouseup);
+      }
+      return { mousedown };
+    })();
+
     /* 点击当前组件时，控制当前组件和其他组件的选中状态 */
     const focusHandler = () => {
       return {
         container: {
           onMousedown: (e: MouseEvent) => {
-            method.clearFocus();
+            // method.clearFocus();
+            (dataModel.value.blocks || []).forEach(block => {
+              block.focus = false;
+            })
           },
         },
         block: {
@@ -103,37 +150,11 @@ export const VisualEditor = defineComponent({
             } else {
               method.clearFocus(block);
             }
+            blockDraggier.mousedown(e)
           }
         }
       }
     }
-
-    /* 处理组件在画布中拖拽的相关动作 */
-    // const blockDraggier = (() => {
-    //   let dragState = {
-    //     startX: 0,
-    //     startY: 0,
-    //   };
-    //   const mousedown = (e: MouseEvent) => {
-    //     dragState = {
-    //       startX: e.clientX,
-    //       startY: e.clientY
-    //     }
-    //     document.addEventListener('mousemove', mousemove);
-    //     document.addEventListener('mouseup', mouseup);
-    //   }
-
-    //   const mousemove = (e: MouseEvent) => {
-    //     const durX = e.clientX - dragState.startX;
-    //     const durY = e.clientY - dragState.startY;
-    //   }
-
-    //   const mouseup = () => {
-    //     document.removeEventListener('mousemove', mousemove);
-    //     document.removeEventListener('mouseup', mouseup);
-    //   }
-    //   return mousedown;
-    // })();
 
     return () => (
       <div class="visual-editor">
