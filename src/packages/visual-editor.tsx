@@ -3,6 +3,7 @@ import { computed, defineComponent, PropType, ref } from "vue";
 import { VisualEditorModelValue, VisualEditorConfig, VisualEditorComponent, createNewBlock, VisualEditorBlock } from "./interface";
 import { useModel } from "./utils/useModel";
 import { VisualEditorBlockRender } from './visual-editor-block';
+import { useVisualCommand } from './plugins/visual-command';
 import "./visual-editor.scss";
 
 export const VisualEditor = defineComponent({
@@ -30,7 +31,7 @@ export const VisualEditor = defineComponent({
       height: `${dataModel.value.container.height}px`
     }))
 
-    /* 计算选中与未选中组件(block)的数据 */
+    /* 计算属性：选中与未选中组件(block)的数据 */
     const focusData = computed(() => {
       const focus: VisualEditorBlock[] = [];
       const unFocus: VisualEditorBlock[] = [];
@@ -125,7 +126,7 @@ export const VisualEditor = defineComponent({
           startPos: focusData.value.focus.map(({ top, left }) => ({ top, left }))
         }
         document.addEventListener('mousemove', mousemove);
-        document.addEventListener('mouseup', mouseup);
+        document.addEventListener(' ', mouseup);
       }
       return { mousedown };
     })();
@@ -156,6 +157,14 @@ export const VisualEditor = defineComponent({
       }
     }
 
+    /* 快捷键 */
+    const commander = useVisualCommand()
+    const buttons = [
+      { label: '撤销', icon: 'iconchehui', handler: commander.undo, tip: 'ctrl + z' },
+      { label: '重做', icon: 'iconzhongzuo', handler: commander.redo, tip: 'ctrl + shift + z' },
+      { label: '删除', icon: 'iconcangpeitubiao_shanchu', handler: () => commander.delete(), tip: 'ctrl + d, backspace, delete' }
+    ]
+
     return () => (
       <div class="visual-editor">
         <div class="visual-editor-menu">
@@ -171,7 +180,15 @@ export const VisualEditor = defineComponent({
               </span>
             </span>)
           }</div>
-        <div class="visual-editor-head">visual-editor-head</div>
+        <div class="visual-editor-head">
+          {
+            buttons.map((btn, index) =>
+              <div key={index} class="visual-editor-head-button">
+                <i class={`iconfont ${btn.icon}`} />
+                <span>{btn.label}</span>
+              </div>
+            )}
+        </div>
         <div class="visual-editor-operator">visual-editor-operator</div>
         <div class="visual-editor-work">
           <div class="visual-editor-content">
