@@ -1,5 +1,19 @@
 import { useCommander } from './command.plugin'
-export function useVisualCommand() {
+import { VisualEditorBlock, VisualEditorModelValue } from '../interface'
+export function useVisualCommand({
+  focusData,
+  updateBlocks,
+  dataModel
+}: {
+  focusData: {
+    value: {
+      focus: VisualEditorBlock[];
+      unFocus: VisualEditorBlock[];
+    };
+  };
+  updateBlocks: (blocks: VisualEditorBlock[]) => void;
+  dataModel: { value: VisualEditorModelValue };
+}) {
   const commander = useCommander();
   commander.registry({
     name: 'delete',
@@ -9,15 +23,20 @@ export function useVisualCommand() {
       'ctrl + d',
     ],
     execute: () => {
-      // 执行删除命令
       console.log('执行删除命令');
+      const data = {
+        before: dataModel.value.blocks || [],
+        after: focusData.value.unFocus,
+      }
       return {
-        undo: () => {
-          console.log('撤回删除命令');
-        },
         redo: () => {
           console.log('重做删除命令');
-        }
+          updateBlocks(data.after);
+        },
+        undo: () => {
+          console.log('撤回删除命令');
+          updateBlocks(data.before);
+        },
       }
     }
   })

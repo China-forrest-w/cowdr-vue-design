@@ -44,7 +44,7 @@ export const VisualEditor = defineComponent({
 
     /* 定义对外暴露的方法 */
     const method = {
-      // 清除没有被点中组件的选中样式状态
+      /* 清除没有被点中组件的选中样式状态 */
       clearFocus: (clickBlock?: VisualEditorBlock) => {
         (dataModel.value.blocks || []).forEach(block => {
           if (block === clickBlock && clickBlock.focus === true) {
@@ -54,7 +54,10 @@ export const VisualEditor = defineComponent({
             clickBlock.focus = true;
           }
         });
-      }
+      },
+      updateBlocks: (blocks: VisualEditorBlock[]) => {
+        dataModel.value = { ...dataModel.value, blocks }
+      },
     }
 
     /* 拖拽的一些方法 */
@@ -126,7 +129,7 @@ export const VisualEditor = defineComponent({
           startPos: focusData.value.focus.map(({ top, left }) => ({ top, left }))
         }
         document.addEventListener('mousemove', mousemove);
-        document.addEventListener(' ', mouseup);
+        document.addEventListener('mouseup', mouseup);
       }
       return { mousedown };
     })();
@@ -158,7 +161,11 @@ export const VisualEditor = defineComponent({
     }
 
     /* 快捷键 */
-    const commander = useVisualCommand()
+    const commander = useVisualCommand({
+      focusData,
+      updateBlocks: method.updateBlocks,
+      dataModel
+    })
     const buttons = [
       { label: '撤销', icon: 'iconchehui', handler: commander.undo, tip: 'ctrl + z' },
       { label: '重做', icon: 'iconzhongzuo', handler: commander.redo, tip: 'ctrl + shift + z' },
@@ -183,7 +190,7 @@ export const VisualEditor = defineComponent({
         <div class="visual-editor-head">
           {
             buttons.map((btn, index) =>
-              <div key={index} class="visual-editor-head-button">
+              <div key={index} class="visual-editor-head-button" onClick={() => btn.handler()}>
                 <i class={`iconfont ${btn.icon}`} />
                 <span>{btn.label}</span>
               </div>
