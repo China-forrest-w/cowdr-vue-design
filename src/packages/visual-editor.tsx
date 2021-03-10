@@ -4,6 +4,7 @@ import { VisualEditorModelValue, VisualEditorConfig, VisualEditorComponent, crea
 import { useModel } from "./utils/useModel";
 import { VisualEditorBlockRender } from './visual-editor-block';
 import { useVisualCommand } from './plugins/visual-command';
+import { createEvent } from './plugins/events';
 import "./visual-editor.scss";
 
 export const VisualEditor = defineComponent({
@@ -42,6 +43,16 @@ export const VisualEditor = defineComponent({
       }
     })
 
+    const dragStart = createEvent();
+    const dragEnd = createEvent();
+
+    // dragStart.on(() => {
+    //   console.log("listen drag start");
+    // })
+    // dragStart.on(() => {
+    //   console.log('listen drag end');
+    // }) 
+
     /* 定义对外暴露的方法 */
     const method = {
       /* 清除没有被点中组件的选中样式状态 */
@@ -79,19 +90,23 @@ export const VisualEditor = defineComponent({
             left: e.offsetX,
           }))
           method.updateBlocks(blocks);
+          // dragEnd.emit();
         }
       },
       blockHandler: {
         /* 拖拽菜单组件时动作开始 */
         dragstart: (currentComponent: VisualEditorComponent) => {
+          console.log('dragstart')
           menuDraggier.dragComponent = currentComponent;
           containerRef.value.addEventListener("dragenter", menuDraggier.containerHandler.dragenter);
           containerRef.value.addEventListener('dragover', menuDraggier.containerHandler.dragover);
           containerRef.value.addEventListener('dragleave', menuDraggier.containerHandler.dragleave);
           containerRef.value.addEventListener('drop', menuDraggier.containerHandler.drop);
+          // dragStart.emit();
         },
         /* 拖拽菜单组件结束 */
         dragend: (e: DragEvent) => {
+          console.log('dragend' )
           containerRef.value.removeEventListener('dragenter', menuDraggier.containerHandler.dragenter);
           containerRef.value, removeEventListener('dragover', menuDraggier.containerHandler.dragover);
           containerRef.value.removeEventListener('dragleave', menuDraggier.containerHandler.dragleave);
@@ -106,12 +121,17 @@ export const VisualEditor = defineComponent({
       let dragState = {
         startX: 0,
         startY: 0,
-        startPos: [] as { left: number; top: number }[]
+        startPos: [] as { left: number; top: number }[],
+        dragging: false,
       };
 
       const mousemove = (e: MouseEvent) => {
         const durX = e.clientX - dragState.startX;        //偏移量X
         const durY = e.clientY - dragState.startY;        //偏移量Y
+        if(!dragState.dragging) {
+          dragState.dragging = true;
+          // dragStart.emit();
+        }
         focusData.value.focus.forEach((block, index) => {
           block.top = dragState.startPos[index].top + durY;
           block.left = dragState.startPos[index].left + durX;
@@ -121,13 +141,17 @@ export const VisualEditor = defineComponent({
       const mouseup = () => {
         document.removeEventListener('mousemove', mousemove);
         document.removeEventListener('mouseup', mouseup);
+        if(dragState.dragging) {
+          // dragEnd.emit();
+        }
       }
 
       const mousedown = (e: MouseEvent) => {
         dragState = {
           startX: e.clientX,
           startY: e.clientY,
-          startPos: focusData.value.focus.map(({ top, left }) => ({ top, left }))
+          startPos: focusData.value.focus.map(({ top, left }) => ({ top, left })),
+          dragging: false,
         }
         document.addEventListener('mousemove', mousemove);
         document.addEventListener('mouseup', mouseup);
@@ -165,7 +189,9 @@ export const VisualEditor = defineComponent({
     const commander = useVisualCommand({
       focusData,
       updateBlocks: method.updateBlocks,
-      dataModel
+      dataModel,
+      dragStart,
+      dragEnd
     })
     const buttons = [
       { label: '撤销', icon: 'iconchehui', handler: commander.undo, tip: 'ctrl + z' },

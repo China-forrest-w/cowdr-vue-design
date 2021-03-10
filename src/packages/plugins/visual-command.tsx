@@ -1,9 +1,12 @@
 import { useCommander } from './command.plugin'
 import { VisualEditorBlock, VisualEditorModelValue } from '../interface'
+import deepcopy from 'deepcopy';
 export function useVisualCommand({
   focusData,
   updateBlocks,
-  dataModel
+  dataModel,
+  dragStart,
+  dragEnd
 }: {
   focusData: {
     value: {
@@ -13,8 +16,11 @@ export function useVisualCommand({
   };
   updateBlocks: (blocks: VisualEditorBlock[]) => void;
   dataModel: { value: VisualEditorModelValue };
+  dragStart: { on: (cb: () => void) => void, off: (cb: () => void) => void } | any,
+  dragEnd: { on: (cb: () => void) => void, off: (cb: () => void) => void } | any
 }) {
   const commander = useCommander();
+
   commander.registry({
     name: 'delete',
     keyboard: [
@@ -41,9 +47,51 @@ export function useVisualCommand({
     }
   })
 
+  commander.registry({
+    name: 'drag',
+    init() {
+      this.data = {
+        // before: dataModel.value.blocks || [],
+        // after: focusData.value.unFocus,
+        before: null as null | VisualEditorBlock[],
+        after: null as null | VisualEditorBlock[]
+      }
+      const handler = {
+        dragStart: () => {
+          this.data.before = deepcopy(dataModel.value.blocks || [])
+        },
+        dragEnd: () => {
+          // this.data.after = deepcopy(dataModel.value.blocks || [])
+          commander.state.commands.drag();
+        }
+      }
+      dragStart.on(handler.dragStart);
+      dragEnd.on(handler.dragEnd);
+      return () => {
+        dragStart.off(handler.dragStart);
+        dragEnd.off(handler.dragEnd);
+      }
+    },
+    execute() {
+      let before = this.data.before;
+      let after = deepcopy(dataModel.value.blocks || []);
+      this.data.after = deepcopy(dataModel.value.blocks || [])
+      return {
+        undo: () => {
+          updateBlocks(deepcopy(before));
+        },
+        redo: () => {
+          updateBlocks(deepcopy(after));
+        }
+      }
+    }
+  })
+commander.init()
+
   return {
     undo: () => commander.state.commands.undo(),
     redo: () => commander.state.commands.redo(),
-    delete: () => commander.state.commands.delete()
+    delete: () => commander.state.commands.delete(),
+    drag: () => commander.state.commands.drag()
   }
 }
