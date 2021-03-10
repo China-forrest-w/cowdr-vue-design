@@ -55,6 +55,7 @@ export const VisualEditor = defineComponent({
           }
         });
       },
+      /* 更新画布元素以及布局： 即进行对象合并*/
       updateBlocks: (blocks: VisualEditorBlock[]) => {
         dataModel.value = { ...dataModel.value, blocks }
       },
@@ -77,7 +78,7 @@ export const VisualEditor = defineComponent({
             top: e.offsetY,
             left: e.offsetX,
           }))
-          dataModel.value = { ...dataModel.value, blocks: blocks }
+          method.updateBlocks(blocks);
         }
       },
       blockHandler: {

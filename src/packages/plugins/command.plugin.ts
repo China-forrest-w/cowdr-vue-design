@@ -29,7 +29,18 @@ export function useCommander() {
         state.queue.push({ undo, redo })
         state.current += 1
       }
-      redo()
+      redo();
+      // console.log('state', state);
+
+      // let { queue, current } = state;
+      // if(queue.length > 0) {
+      //   queue = queue.slice(0, current + 1);
+      //   state.queue = queue;
+      // }
+      // queue.push({undo, redo});
+      // state.current = current + 1;
+
+
     }
   };
 
