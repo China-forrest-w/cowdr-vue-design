@@ -46,28 +46,29 @@ export function useCommander() {
     command.init && command.init();
   };
 
+  /* 键盘实现的快捷键使用工具栏命令： 通过闭包实现 */
   const keyboardEvent = (() => {
     const onKeydown = (e: KeyboardEvent) => {
+      /* 按下键盘快捷键时要做的一些事情 */
       console.log('e', e);
     }
-
-    const init = () => {
+    /* 进行keydown监听并且返回remove监听方法 */
+    const monitorAndRemoveKeyboard = () => {
       window.addEventListener("keydown", onKeydown);
       return () => window.removeEventListener('keydown', onKeydown);
     }
-
-    return init;
+    return monitorAndRemoveKeyboard;
   })();
 
-  const init = () => {
-    console.log('监听到键盘事件--before')
+  const keyboardInit = () => {
     const onKeydown = (e: KeyboardEvent) => {
+      /* 按下键盘快捷键时要做的一些事情 */
       console.log("监听到键盘事件");
     }
     window.addEventListener('keydown', onKeydown)
     state.commandArray.forEach(command => !!command.init && state.destroyList.push(command.init()));
     state.destroyList.push(keyboardEvent());
-    state.destroyList.push(() => {console.log('window.removeEventListener( onKeydown)'),window.removeEventListener('keydown', onKeydown)});
+    state.destroyList.push(() => { console.log('window.removeEventListener( onKeydown)'), window.removeEventListener('keydown', onKeydown) });
   }
 
   registry({
@@ -106,6 +107,6 @@ export function useCommander() {
   return {
     state,
     registry,
-    init
+    keyboardInit
   }
 }

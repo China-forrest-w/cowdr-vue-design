@@ -86,7 +86,9 @@ export function useVisualCommand({
       }
     }
   })
-  commander.init()
+  /* 上面注册完命令之后，下面对命令的快捷键进行监听 */
+  /* 执行键盘监听函数，即监听快捷键 */
+  commander.keyboardInit()
 
   return {
     undo: () => commander.state.commands.undo(),
