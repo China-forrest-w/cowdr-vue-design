@@ -16,8 +16,8 @@ export function useVisualCommand({
   };
   updateBlocks: (blocks: VisualEditorBlock[]) => void;
   dataModel: { value: VisualEditorModelValue };
-  dragStart: { on: (cb: () => void) => void, off: (cb: () => void) => void } | any,
-  dragEnd: { on: (cb: () => void) => void, off: (cb: () => void) => void } | any
+  dragStart: { on: (cb: () => void) => void; off: (cb: () => void) => void };
+  dragEnd: { on: (cb: () => void) => void; off: (cb: () => void) => void };
 }) {
   const commander = useCommander();
 
@@ -73,8 +73,8 @@ export function useVisualCommand({
       }
     },
     execute() {
-      let before = this.data.before;
-      let after = deepcopy(dataModel.value.blocks || []);
+      const before = this.data.before;
+      const after = deepcopy(dataModel.value.blocks || []);
       this.data.after = deepcopy(dataModel.value.blocks || [])
       return {
         undo: () => {
@@ -86,7 +86,7 @@ export function useVisualCommand({
       }
     }
   })
-commander.init()
+  commander.init()
 
   return {
     undo: () => commander.state.commands.undo(),
