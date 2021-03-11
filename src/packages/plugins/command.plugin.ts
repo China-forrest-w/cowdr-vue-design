@@ -46,15 +46,29 @@ export function useCommander() {
     command.init && command.init();
   };
 
+  const keyboardEvent = (() => {
+    const onKeydown = (e: KeyboardEvent) => {
+      console.log('e', e);
+    }
+
+    const init = () => {
+      window.addEventListener("keydown", onKeydown);
+      return () => window.removeEventListener('keydown', onKeydown);
+    }
+
+    return init;
+  })();
+
   const init = () => {
     const onKeydown = (e: KeyboardEvent) => {
       // console.log("监听到键盘事件");
       window.addEventListener('keydown', onKeydown)
-      state.commandArray.forEach(command => !!command.init && state.destroyList.push(command.init()))
-      state.destroyList.push(() => window.removeEventListener('keydown', onKeydown))
+      state.commandArray.forEach(command => !!command.init && state.destroyList.push(command.init()));
+      state.destroyList.push(keyboardEvent());
+      state.destroyList.push(() => window.removeEventListener('keydown', onKeydown));
     }
   }
-  
+
   registry({
     name: 'undo',
     keyboard: 'ctrl + z',

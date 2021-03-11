@@ -18,7 +18,7 @@ export const VisualEditorBlockRender = defineComponent({
         'visual-editor-block-focus': props.block?.focus
       }
     ])
-    console.log('classes.value', classes.value);
+    // console.log('classes.value', classes.value);
     const styles = computed(() => ({
       top: `${props?.block?.top}px`,
       left: `${props?.block?.left}px`,

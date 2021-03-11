@@ -5,6 +5,7 @@ import { useModel } from "./utils/useModel";
 import { VisualEditorBlockRender } from './visual-editor-block';
 import { useVisualCommand } from './plugins/visual-command';
 import { createEvent } from './plugins/events';
+import { ElTooltip } from 'element-plus'
 import "./visual-editor.scss";
 
 export const VisualEditor = defineComponent({
@@ -42,20 +43,13 @@ export const VisualEditor = defineComponent({
         unFocus              //未选中组件的数据
       }
     })
-
+    /* 事件监听者对象：可以用来监听拖拽开始的事情和拖拽结束的事情 */
     const dragStart = createEvent();
     const dragEnd = createEvent();
 
-    // dragStart.on(() => {
-    //   console.log("listen drag start");
-    // })
-    // dragStart.on(() => {
-    //   console.log('listen drag end');
-    // }) 
-
     /* 定义对外暴露的方法 */
     const method = {
-      /* 清除没有被点中组件的选中样式状态 */
+      /* 清除没有被点中元素的选中状态（样式） */
       clearFocus: (clickBlock?: VisualEditorBlock) => {
         (dataModel.value.blocks || []).forEach(block => {
           if (block === clickBlock && clickBlock.focus === true) {
@@ -72,7 +66,7 @@ export const VisualEditor = defineComponent({
       },
     }
 
-    /* 拖拽的一些方法 */
+    /* 处理：菜单-->画布 拖拽的一些方法 */
     const menuDraggier = {
       dragComponent: null as (null | VisualEditorComponent),
       containerHandler: {
@@ -90,7 +84,7 @@ export const VisualEditor = defineComponent({
             left: e.offsetX,
           }))
           method.updateBlocks(blocks);
-          // dragEnd.emit();
+          dragEnd.emit();
         }
       },
       blockHandler: {
@@ -102,11 +96,11 @@ export const VisualEditor = defineComponent({
           containerRef.value.addEventListener('dragover', menuDraggier.containerHandler.dragover);
           containerRef.value.addEventListener('dragleave', menuDraggier.containerHandler.dragleave);
           containerRef.value.addEventListener('drop', menuDraggier.containerHandler.drop);
-          // dragStart.emit();
+          dragStart.emit();
         },
         /* 拖拽菜单组件结束 */
         dragend: (e: DragEvent) => {
-          console.log('dragend' )
+          console.log('dragend')
           containerRef.value.removeEventListener('dragenter', menuDraggier.containerHandler.dragenter);
           containerRef.value, removeEventListener('dragover', menuDraggier.containerHandler.dragover);
           containerRef.value.removeEventListener('dragleave', menuDraggier.containerHandler.dragleave);
@@ -116,7 +110,7 @@ export const VisualEditor = defineComponent({
       }
     }
 
-    /* 处理组件在画布中拖拽的相关动作 */
+    /* 处理：组件在画布中拖拽的相关动作 */
     const blockDraggier = (() => {
       let dragState = {
         startX: 0,
@@ -128,9 +122,9 @@ export const VisualEditor = defineComponent({
       const mousemove = (e: MouseEvent) => {
         const durX = e.clientX - dragState.startX;        //偏移量X
         const durY = e.clientY - dragState.startY;        //偏移量Y
-        if(!dragState.dragging) {
+        if (!dragState.dragging) {
           dragState.dragging = true;
-          // dragStart.emit();
+          dragStart.emit();
         }
         focusData.value.focus.forEach((block, index) => {
           block.top = dragState.startPos[index].top + durY;
@@ -141,8 +135,8 @@ export const VisualEditor = defineComponent({
       const mouseup = () => {
         document.removeEventListener('mousemove', mousemove);
         document.removeEventListener('mouseup', mouseup);
-        if(dragState.dragging) {
-          // dragEnd.emit();
+        if (dragState.dragging) {
+          dragEnd.emit();
         }
       }
 
@@ -185,7 +179,7 @@ export const VisualEditor = defineComponent({
       }
     }
 
-    /* 快捷键 */
+    /* 命令对象：快捷键 */
     const commander = useVisualCommand({
       focusData,
       updateBlocks: method.updateBlocks,
@@ -217,10 +211,12 @@ export const VisualEditor = defineComponent({
         <div class="visual-editor-head">
           {
             buttons.map((btn, index) =>
-              <div key={index} class="visual-editor-head-button" onClick={() => btn.handler()}>
+            <ElTooltip content={btn.tip}>
+              <div key={index} class="visual-editor-head-button" onClick={btn.handler} >
                 <i class={`iconfont ${btn.icon}`} />
                 <span>{btn.label}</span>
               </div>
+              </ElTooltip>
             )}
         </div>
         <div class="visual-editor-operator">visual-editor-operator</div>
