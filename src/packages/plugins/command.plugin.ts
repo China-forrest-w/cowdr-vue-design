@@ -60,13 +60,14 @@ export function useCommander() {
   })();
 
   const init = () => {
+    console.log('监听到键盘事件--before')
     const onKeydown = (e: KeyboardEvent) => {
-      // console.log("监听到键盘事件");
-      window.addEventListener('keydown', onKeydown)
-      state.commandArray.forEach(command => !!command.init && state.destroyList.push(command.init()));
-      state.destroyList.push(keyboardEvent());
-      state.destroyList.push(() => window.removeEventListener('keydown', onKeydown));
+      console.log("监听到键盘事件");
     }
+    window.addEventListener('keydown', onKeydown)
+    state.commandArray.forEach(command => !!command.init && state.destroyList.push(command.init()));
+    state.destroyList.push(keyboardEvent());
+    state.destroyList.push(() => {console.log('window.removeEventListener( onKeydown)'),window.removeEventListener('keydown', onKeydown)});
   }
 
   registry({
