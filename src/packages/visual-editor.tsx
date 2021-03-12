@@ -158,8 +158,8 @@ export const VisualEditor = defineComponent({
       return {
         container: {
           onMousedown: (e: MouseEvent) => {
-            // method.clearFocus();
             e.preventDefault();
+            if(e.currentTarget !== e.target) return;
             (dataModel.value.blocks || []).forEach(block => {
               block.focus = false;
             })
