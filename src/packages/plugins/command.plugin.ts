@@ -1,5 +1,6 @@
 /* 工具栏命令操作的定义：撤回(+)、重做(-)、预览、导入、导出、置顶、置底、删除、清空、关闭等。 */
 import { onUnmounted, reactive } from 'vue';
+import { KEYBOARDCODE } from './keyboard-code';
 /* 功能方法 */
 export interface CommandExecute {
   undo?: () => void;                                                                    //撤回操作 +
@@ -49,8 +50,24 @@ export function useCommander() {
   /* 键盘实现的快捷键使用工具栏命令： 通过闭包实现 */
   const keyboardEvent = (() => {
     const onKeydown = (e: KeyboardEvent) => {
-      /* 按下键盘快捷键时要做的一些事情 */
-      console.log('e', e);
+      /* 当获得焦点的元素是body时，按下键盘快捷键时要做的一些事情 */
+      if (document.activeElement !== document.body) {
+        return;
+      }
+      const { keyCode, ctrlKey, shiftKey, altKey, metaKey } = e;
+      // console.log('e', e);
+            // console.log('keyCode,', keyCode);
+      const keyStringContainer: string[] = [];
+      (ctrlKey || metaKey) && keyStringContainer.push('ctrl');
+      shiftKey && keyStringContainer.push('shift');
+      altKey && keyStringContainer.push('alt');
+      keyStringContainer.push(KEYBOARDCODE[keyCode]);
+      // console.log('keyStringContainer',keyStringContainer)
+      const name = keyStringContainer.join('+');
+      // console.log('快捷键name', name);
+      state.commandArray.forEach(({keyboard, name}) => {
+        console.log('keyboard', keyboard);
+      })
     }
     /* 进行keydown监听并且返回remove监听方法 */
     const monitorAndRemoveKeyboard = () => {
