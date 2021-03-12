@@ -31,6 +31,7 @@ export function useCommander() {
     state.commandArray.push(command);
     state.commands[command.name] = (...args) => {
       const { undo, redo } = command.execute(...args);
+      /* 触发事件即执行redo(重做) */
       redo();
       if (command.followQueue === false) {
         return;

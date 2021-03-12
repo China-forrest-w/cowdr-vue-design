@@ -191,7 +191,8 @@ export const VisualEditor = defineComponent({
     const buttons = [
       { label: '撤销', icon: 'iconchehui', handler: commander.undo, tip: 'ctrl + z' },
       { label: '重做', icon: 'iconzhongzuo', handler: commander.redo, tip: 'ctrl + shift + z' },
-      { label: '删除', icon: 'iconcangpeitubiao_shanchu', handler: () => commander.delete(), tip: 'ctrl + d, backspace, delete' }
+      { label: '删除', icon: 'iconcangpeitubiao_shanchu', handler: () => commander.delete(), tip: 'ctrl + d, backspace, delete' },
+      { label: '清空', icon: 'iconqingkong', handler: () => commander.clear(), tip: '请谨慎操作'},
     ]
 
     return () => (

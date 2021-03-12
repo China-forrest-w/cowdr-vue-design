@@ -94,10 +94,10 @@ export function useVisualCommand({
       }
       return {
         undo: () => {
-          updateBlocks(deepcopy(data.after))
+          updateBlocks(deepcopy(data.before))
         },
         redo: () => {
-          updateBlocks(deepcopy(data.before) || [])
+          updateBlocks(deepcopy(data.after) || [])
         }
       }
     }
