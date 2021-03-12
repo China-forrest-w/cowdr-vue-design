@@ -159,6 +159,7 @@ export const VisualEditor = defineComponent({
         container: {
           onMousedown: (e: MouseEvent) => {
             // method.clearFocus();
+            e.preventDefault();
             (dataModel.value.blocks || []).forEach(block => {
               block.focus = false;
             })
@@ -211,11 +212,11 @@ export const VisualEditor = defineComponent({
         <div class="visual-editor-head">
           {
             buttons.map((btn, index) =>
-            <ElTooltip content={btn.tip}>
-              <div key={index} class="visual-editor-head-button" onClick={btn.handler} >
-                <i class={`iconfont ${btn.icon}`} />
-                <span>{btn.label}</span>
-              </div>
+              <ElTooltip content={btn.tip}>
+                <div key={index} class="visual-editor-head-button" onClick={btn.handler} >
+                  <i class={`iconfont ${btn.icon}`} />
+                  <span>{btn.label}</span>
+                </div>
               </ElTooltip>
             )}
         </div>
