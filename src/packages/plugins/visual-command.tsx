@@ -26,7 +26,7 @@ export function useVisualCommand({
     keyboard: [
       'backspace',
       'delete',
-      'ctrl + d',
+      'ctrl+d',
     ],
     execute: () => {
       console.log('执行删除命令');

@@ -220,7 +220,7 @@ export const VisualEditor = defineComponent({
               </ElTooltip>
             )}
         </div>
-        <div class="visual-editor-operator">visual-editor-operator</div>
+        <div class="visual-editor-operator">操作区</div>
         <div class="visual-editor-work">
           <div class="visual-editor-content">
             <div class="visual-editor-container"

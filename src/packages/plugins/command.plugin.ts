@@ -56,17 +56,21 @@ export function useCommander() {
       }
       const { keyCode, ctrlKey, shiftKey, altKey, metaKey } = e;
       // console.log('e', e);
-            // console.log('keyCode,', keyCode);
       const keyStringContainer: string[] = [];
       (ctrlKey || metaKey) && keyStringContainer.push('ctrl');
       shiftKey && keyStringContainer.push('shift');
       altKey && keyStringContainer.push('alt');
       keyStringContainer.push(KEYBOARDCODE[keyCode]);
-      // console.log('keyStringContainer',keyStringContainer)
-      const name = keyStringContainer.join('+');
-      // console.log('快捷键name', name);
-      state.commandArray.forEach(({keyboard, name}) => {
-        console.log('keyboard', keyboard);
+      const keyName = keyStringContainer.join('+');
+      console.log("keyName",keyName);
+      state.commandArray.forEach(({ keyboard, name }) => {
+        if (!keyboard) return;
+        const keys = Array.isArray(keyboard) ? keyboard : [keyboard]
+        if (keys.indexOf(keyName) > -1) {
+          state.commands[name]();
+          e.stopPropagation();
+          e.preventDefault();
+        }
       })
     }
     /* 进行keydown监听并且返回remove监听方法 */
@@ -90,7 +94,7 @@ export function useCommander() {
 
   registry({
     name: 'undo',
-    keyboard: 'ctrl + z',
+    keyboard: 'ctrl+z',
     followQueue: false,
     execute: () => {
       return {
@@ -106,7 +110,7 @@ export function useCommander() {
   });
   registry({
     name: 'redo',
-    keyboard: 'ctrl + shift + z',
+    keyboard: 'ctrl+shift+z',
     followQueue: false,
     execute: () => {
       return {
