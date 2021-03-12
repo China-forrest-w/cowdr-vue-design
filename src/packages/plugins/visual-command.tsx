@@ -51,8 +51,6 @@ export function useVisualCommand({
     name: 'drag',
     init() {
       this.data = {
-        // before: dataModel.value.blocks || [],
-        // after: focusData.value.unFocus,
         before: null as null | VisualEditorBlock[],
         after: null as null | VisualEditorBlock[]
       }
@@ -86,14 +84,31 @@ export function useVisualCommand({
       }
     }
   })
-  /* 上面注册完命令之后，下面对命令的快捷键进行监听 */
-  /* 执行键盘监听函数，即监听快捷键 */
-  commander.keyboardInit()
 
+  commander.registry({
+    name: 'clear',
+    execute() {
+      const data = {
+        before: deepcopy(dataModel.value.blocks || []),
+        after: deepcopy([])
+      }
+      return {
+        undo: () => {
+          updateBlocks(deepcopy(data.after))
+        },
+        redo: () => {
+          updateBlocks(deepcopy(data.before) || [])
+        }
+      }
+    }
+  })
+  /* 上面注册完命令之后，下面对命令的快捷键进行监听    /* 执行键盘监听函数，即监听快捷键 */
+  commander.keyboardInit()
   return {
     undo: () => commander.state.commands.undo(),
     redo: () => commander.state.commands.redo(),
     delete: () => commander.state.commands.delete(),
-    drag: () => commander.state.commands.drag()
+    drag: () => commander.state.commands.drag(),
+    clear: () => commander.state.commands.clear(),
   }
 }
