@@ -1,5 +1,5 @@
-import { useCommander } from './command.plugin'
-import { VisualEditorBlock, VisualEditorModelValue } from '../interface'
+import { useCommander } from '../plugins/command.plugin'
+import { VisualEditorBlock, VisualEditorModelValue } from '@/packages/interface'
 import deepcopy from 'deepcopy';
 export function useVisualCommand({
   focusData,

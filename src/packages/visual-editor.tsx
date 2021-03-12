@@ -3,7 +3,7 @@ import { computed, defineComponent, PropType, ref } from "vue";
 import { VisualEditorModelValue, VisualEditorConfig, VisualEditorComponent, createNewBlock, VisualEditorBlock } from "./interface";
 import { useModel } from "./utils/useModel";
 import { VisualEditorBlockRender } from './visual-editor-block';
-import { useVisualCommand } from './plugins/visual-command';
+import { useVisualCommand } from './utils/visual-command';
 import { createEvent } from './plugins/events';
 import { ElTooltip } from 'element-plus'
 import "./visual-editor.scss";
