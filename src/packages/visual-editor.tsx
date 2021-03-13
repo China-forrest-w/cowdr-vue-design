@@ -193,7 +193,7 @@ export const VisualEditor = defineComponent({
       { label: '撤销', icon: 'iconchehui', handler: commander.undo, tip: 'ctrl + z' },
       { label: '重做', icon: 'iconzhongzuo', handler: commander.redo, tip: 'ctrl + shift + z' },
       {
-        label: '导入', icon: 'icon-import', handler: async () => {
+        label: '导入', icon: 'icondaoru', handler: async () => {
           // const text = await $dialog.textarea('', {title: '请输入导入的JSON数据'})
           // if (!text) {return}
           const text = await $dialog.input();
@@ -207,7 +207,8 @@ export const VisualEditor = defineComponent({
               message: '导入的数据格式不正常，请检查！'
             })
           }
-        }
+        },
+        tip: '导入模板数据'
       },
       // {label: '导出', icon: 'icon-export', handler: () => $dialog.textarea(JSON.stringify(dataModel.value), {title: '导出的JSON数据', editReadonly: true})},
 
