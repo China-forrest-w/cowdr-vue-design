@@ -6,7 +6,7 @@ import { VisualEditorBlockRender } from './visual-editor-block';
 import { useVisualCommand } from './utils/visual-command';
 import { createEvent } from './plugins/events';
 import { ElNotification, ElTooltip } from 'element-plus'
-import {$$dialog} from "@/packages/utils/dialog-service";
+import { $dialog } from "@/packages/utils/dialog-service";
 import "./visual-editor.scss";
 
 export const VisualEditor = defineComponent({
@@ -160,7 +160,7 @@ export const VisualEditor = defineComponent({
         container: {
           onMousedown: (e: MouseEvent) => {
             e.preventDefault();
-            if(e.currentTarget !== e.target) return;
+            if (e.currentTarget !== e.target) return;
             (dataModel.value.blocks || []).forEach(block => {
               block.focus = false;
             })
@@ -194,25 +194,25 @@ export const VisualEditor = defineComponent({
       { label: '重做', icon: 'iconzhongzuo', handler: commander.redo, tip: 'ctrl + shift + z' },
       {
         label: '导入', icon: 'icon-import', handler: async () => {
-            // const text = await $$dialog.textarea('', {title: '请输入导入的JSON数据'})
-            // if (!text) {return}
-            const text = await $$dialog.input();
-            console.log('text', text);
-            try {
-                // const data = JSON.parse(text)
-                // commander.updateModelValue(data)
-            } catch (e) {
-                ElNotification({
-                    title: '导入失败！',
-                    message: '导入的数据格式不正常，请检查！'
-                })
-            }
+          // const text = await $dialog.textarea('', {title: '请输入导入的JSON数据'})
+          // if (!text) {return}
+          const text = await $dialog.input();
+          console.log('text', text);
+          try {
+            // const data = JSON.parse(text)
+            // commander.updateModelValue(data)
+          } catch (e) {
+            ElNotification({
+              title: '导入失败！',
+              message: '导入的数据格式不正常，请检查！'
+            })
+          }
         }
-    },
-    // {label: '导出', icon: 'icon-export', handler: () => $$dialog.textarea(JSON.stringify(dataModel.value), {title: '导出的JSON数据', editReadonly: true})},
-    
+      },
+      // {label: '导出', icon: 'icon-export', handler: () => $dialog.textarea(JSON.stringify(dataModel.value), {title: '导出的JSON数据', editReadonly: true})},
+
       { label: '删除', icon: 'iconcangpeitubiao_shanchu', handler: () => commander.delete(), tip: 'ctrl + d, backspace, delete' },
-      { label: '清空', icon: 'iconqingkong', handler: () => commander.clear(), tip: '请谨慎操作'},
+      { label: '清空', icon: 'iconqingkong', handler: () => commander.clear(), tip: '请谨慎操作' },
     ]
 
     return () => (
