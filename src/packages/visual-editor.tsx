@@ -210,8 +210,7 @@ export const VisualEditor = defineComponent({
         },
         tip: '导入模板数据'
       },
-      // {label: '导出', icon: 'icon-export', handler: () => $dialog.textarea(JSON.stringify(dataModel.value), {title: '导出的JSON数据', editReadonly: true})},
-
+      { label: '导出', icon: 'icondaochu', handler: () => $dialog.textarea(JSON.stringify(dataModel.value), { title: '导出的JSON数据', editReadonly: false }), tip: '导出代码' },
       { label: '删除', icon: 'iconcangpeitubiao_shanchu', handler: () => commander.delete(), tip: 'ctrl + d, backspace, delete' },
       { label: '清空', icon: 'iconqingkong', handler: () => commander.clear(), tip: '请谨慎操作' },
     ]
