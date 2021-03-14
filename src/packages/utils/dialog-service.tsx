@@ -27,7 +27,6 @@ const Component = defineComponent({
   setup(props) {
 
     const ctx = getCurrentInstance()!
-
     const state = reactive({
       option: props.option,
       showFlag: false,
@@ -70,7 +69,7 @@ const Component = defineComponent({
             )}
           </>,
           footer: !(state.option.confirmButton || state.option.cancelButton) ? null : () => <>
-            {!!state.option.confirmButton && <ElButton {...{ onClick: handler.onConfirm } as any}>确认</ElButton>}
+            {!!state.option.confirmButton && <ElButton {...{ onClick: handler.onConfirm, type: 'primary' } as any}>确认</ElButton>}
             {!!state.option.cancelButton && <ElButton {...{ onClick: handler.onCancel } as any}>取消</ElButton>}
           </>
         }}
@@ -99,12 +98,12 @@ export const $dialog = Object.assign(DialogService, {
     option.editType = DialogServiceEdit.input
     option.editValue = val
     if (option.editReadonly !== true) {
-      option.confirmButton = true
-      option.cancelButton = true
-      option.onConfirm = dfd.resolve
+      option.confirmButton = true;
+      option.cancelButton = true;
+      option.onConfirm = dfd.resolve;
     }
-    DialogService(option)
-    return dfd.promise
+    DialogService(option);
+    return dfd.promise;
   },
   textarea: (val?: string, option?: DialogServiceOption) => {
     const dfd = defer<string | undefined>()
