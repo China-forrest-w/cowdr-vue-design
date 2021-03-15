@@ -194,13 +194,11 @@ export const VisualEditor = defineComponent({
       { label: '重做', icon: 'iconzhongzuo', handler: commander.redo, tip: 'ctrl + shift + z' },
       {
         label: '导入', icon: 'icondaoru', handler: async () => {
-          // const text = await $dialog.textarea('', {title: '请输入导入的JSON数据'})
-          // if (!text) {return}
-          const text = await $dialog.input();
-          console.log('text', text);
+          const text = await $dialog.textarea('', {title: '请输入导入的JSON数据'})
+          if (!text) {return}
           try {
-            // const data = JSON.parse(text)
-            // commander.updateModelValue(data)
+            const data = JSON.parse(text)
+            commander.updateModelValue(data)
           } catch (e) {
             ElNotification({
               title: '导入失败！',

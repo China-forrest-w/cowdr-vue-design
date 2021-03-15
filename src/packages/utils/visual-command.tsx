@@ -47,6 +47,27 @@ export function useVisualCommand({
     }
   })
 
+  /*更新 modelValue*/
+  commander.registry({
+    name: 'updateModelValue',
+    execute: (newModelValue: VisualEditorModelValue) => {
+      let before: undefined | VisualEditorModelValue = undefined
+      let after: undefined | VisualEditorModelValue = undefined
+      return {
+        redo: () => {
+          if (!before && !after) {
+            before = deepcopy(dataModel.value)
+            dataModel.value = deepcopy(newModelValue)
+            after = deepcopy(newModelValue)
+          } else {
+            dataModel.value = deepcopy(after!)
+          }
+        },
+        undo: () => dataModel.value = deepcopy(before!),
+      }
+    },
+  });
+  /*拖拽*/
   commander.registry({
     name: 'drag',
     init() {
@@ -110,5 +131,6 @@ export function useVisualCommand({
     delete: () => commander.state.commands.delete(),
     drag: () => commander.state.commands.drag(),
     clear: () => commander.state.commands.clear(),
+    updateModelValue: (newModelValue: VisualEditorModelValue) => commander.state.commands.updateModelValue(newModelValue),
   }
 }
